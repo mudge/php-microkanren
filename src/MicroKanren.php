@@ -172,4 +172,37 @@ class MicroKanren
     {
         return self::cons(self::$mzero, 0);
     }
+
+    public static function pull($d)
+    {
+        if (is_callable($d)) {
+            return self::pull($d());
+        } else {
+            return $d;
+        }
+    }
+
+    public static function takeAll($d)
+    {
+        $d = self::pull($d);
+        if (self::isNull($d)) {
+            return array();
+        } else {
+            return self::cons(self::car($d), self::takeAll(self::cdr($d)));
+        }
+    }
+
+    public static function take($n, $d)
+    {
+        if ($n === 0) {
+            return array();
+        } else {
+            $d = self::pull($d);
+            if (self::isNull($d)) {
+                return array();
+            } else {
+                return self::cons(self::car($d), self::take($n - 1, self::cdr($d)));
+            }
+        }
+    }
 }

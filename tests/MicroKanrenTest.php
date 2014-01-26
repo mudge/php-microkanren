@@ -71,14 +71,30 @@ class MicroKanrenTest extends PHPUnit_Framework_TestCase
     {
         $x = self::aAndB();
         $result = $x(MicroKanren::emptyState());
-        $this->assertEquals(array(array(array(array(1), 5), array(array(array(0), 7), array())), 2), MicroKanren::car($result));
+        $this->assertEquals(
+            array(array(array(array(1), 5), array(array(array(0), 7), array())), 2),
+            MicroKanren::car($result)
+        );
+    }
+
+    public function testSecondSetT3Take()
+    {
+        $x = self::aAndB();
+        $result = $x(MicroKanren::emptyState());
+        $this->assertEquals(
+            array(array(array(array(array(1), 5), array(array(array(0), 7), array())), 2), array()),
+            MicroKanren::take(1, $result)
+        );
     }
 
     public function testSecondSetT4()
     {
         $x = self::aAndB();
         $result = $x(MicroKanren::emptyState());
-        $this->assertEquals(array(array(array(array(1), 6), array(array(array(0), 7), array())), 2), MicroKanren::car(MicroKanren::cdr($result)));
+        $this->assertEquals(
+            array(array(array(array(1), 6), array(array(array(0), 7), array())), 2),
+            MicroKanren::car(MicroKanren::cdr($result))
+        );
     }
 
     public function testSecondSetT5()
@@ -102,11 +118,39 @@ class MicroKanrenTest extends PHPUnit_Framework_TestCase
     }
 
     public function testWhoCares()
-    {
-        $x = MicroKanren::callFresh(function ($q) {
+    { $x = MicroKanren::callFresh(function ($q) {
             return MicroKanrenTest::fives($q);
         });
         $result = $x(MicroKanren::emptyState());
-        $this->assertEquals(array(array(array(array(0), 5), array()), 1), MicroKanren::car($result));
+        $this->assertEquals(
+            array(array(array(array(array(0), 5), array()), 1), array()),
+            MicroKanren::take(1, $result)
+        );
+    }
+
+    public function testTake2AAndBStream()
+    {
+        $f = self::aAndB();
+        $d = $f(MicroKanren::emptyState());
+        $this->assertEquals(
+            array(
+                array(array(array(array(1), 5), array(array(array(0), 7), array())), 2),
+                array(array(array(array(array(1), 6), array(array(array(0), 7), array())), 2), array())
+            ),
+            MicroKanren::take(2, $d)
+        );
+    }
+
+    public function testTakeAllAAndBStream()
+    {
+        $f = self::aAndB();
+        $d = $f(MicroKanren::emptyState());
+        $this->assertEquals(
+            array(
+                array(array(array(array(1), 5), array(array(array(0), 7), array())), 2),
+                array(array(array(array(array(1), 6), array(array(array(0), 7), array())), 2), array())
+            ),
+            MicroKanren::takeAll($d)
+        );
     }
 }
