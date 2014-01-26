@@ -1,4 +1,5 @@
-# PHPµKanren
+# PHPµKanren [![Build Status](https://travis-ci.org/mudge/php-microkanren.png?branch=master)](https://travis-ci.org/mudge/php-microkanren)
+
 
 A PHP implementation of [Jason Hemann and Daniel P. Friedman's
 µKanren](http://webyrd.net/scheme-2013/papers/HemannMuKanren2013.pdf).
