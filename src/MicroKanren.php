@@ -1,7 +1,7 @@
 <?php
 class MicroKanren
 {
-    public static $mzero = null;
+    public static $mzero = array();
 
     public static function vari($c)
     {
@@ -123,9 +123,14 @@ class MicroKanren
         };
     }
 
+    public static function isNull($v)
+    {
+        return $v === self::$mzero;
+    }
+
     public static function mplus($d1, $d2)
     {
-        if (is_null($d1)) {
+        if (self::isNull($d1)) {
             return $d2;
         } elseif (is_callable($d1)) {
             return function () use ($d1, $d2) {
@@ -138,7 +143,7 @@ class MicroKanren
 
     public static function bind($d, $g)
     {
-        if (is_null($d)) {
+        if (self::isNull($d)) {
             return self::$mzero;
         } elseif (is_callable($d)) {
             return function () use ($d, $g) {

@@ -40,7 +40,7 @@ class MicroKanrenTest extends PHPUnit_Framework_TestCase
             return MicroKanren::eq($q, 5);
         });
         $result = $x(MicroKanren::emptyState());
-        $this->assertEquals(array(array(array(array(0), 5), null), 1), MicroKanren::car($result));
+        $this->assertEquals(array(array(array(array(0), 5), array()), 1), MicroKanren::car($result));
     }
 
     public function testSecondSetT2()
@@ -49,7 +49,7 @@ class MicroKanrenTest extends PHPUnit_Framework_TestCase
             return MicroKanren::eq($q, 5);
         });
         $result = $x(MicroKanren::emptyState());
-        $this->assertNull(MicroKanren::cdr($result));
+        $this->assertEquals(array(), MicroKanren::cdr($result));
     }
 
     public static function aAndB()
@@ -71,21 +71,21 @@ class MicroKanrenTest extends PHPUnit_Framework_TestCase
     {
         $x = self::aAndB();
         $result = $x(MicroKanren::emptyState());
-        $this->assertEquals(array(array(array(array(1), 5), array(array(array(0), 7), null)), 2), MicroKanren::car($result));
+        $this->assertEquals(array(array(array(array(1), 5), array(array(array(0), 7), array())), 2), MicroKanren::car($result));
     }
 
     public function testSecondSetT4()
     {
         $x = self::aAndB();
         $result = $x(MicroKanren::emptyState());
-        $this->assertEquals(array(array(array(array(1), 6), array(array(array(0), 7), null)), 2), MicroKanren::car(MicroKanren::cdr($result)));
+        $this->assertEquals(array(array(array(array(1), 6), array(array(array(0), 7), array())), 2), MicroKanren::car(MicroKanren::cdr($result)));
     }
 
     public function testSecondSetT5()
     {
         $x = self::aAndB();
         $result = $x(MicroKanren::emptyState());
-        $this->assertNull(MicroKanren::cdr(MicroKanren::cdr($result)));
+        $this->assertEquals(array(), MicroKanren::cdr(MicroKanren::cdr($result)));
     }
 
     public static function fives($x)
@@ -107,6 +107,6 @@ class MicroKanrenTest extends PHPUnit_Framework_TestCase
             return MicroKanrenTest::fives($q);
         });
         $result = $x(MicroKanren::emptyState());
-        $this->assertEquals(array(array(array(array(0), 5), null), 1), MicroKanren::car($result));
+        $this->assertEquals(array(array(array(array(0), 5), array()), 1), MicroKanren::car($result));
     }
 }
