@@ -11,33 +11,7 @@ $f = MicroKanren::callFresh(function ($q) {
   return MicroKanren::eq($q, 5);
 });
 $f(MicroKanren::emptyState());
-
-/* =>
- * Array
- * (
- *     [0] => Array
- *         (
- *             [0] => Array
- *                 (
- *                     [0] => Array
- *                         (
- *                             [0] => Array
- *                                 (
- *                                     [0] => 0
- *                                 )
- * 
- *                             [1] => 5
- *                         )
- * 
- *                     [1] => 
- *                 )
- * 
- *             [1] => 1
- *         )
- * 
- *     [1] => 
- * )
- */
+/* => (((((0), 5), ()), 1), ()) */
 ```
 
 See [the test
