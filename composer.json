@@ -16,8 +16,6 @@
         "phpunit/phpunit": "3.7.*"
     },
     "autoload": {
-        "psr-4": {
-            "MicroKanren\\": "src/MicroKanren/"
-        }
+        "files": ["src/MicroKanren/Core.php"]
     }
 }
