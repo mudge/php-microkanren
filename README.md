@@ -10,15 +10,17 @@ A PHP implementation of [Jason Hemann and Daniel P. Friedman's
 ## Usage
 
 ```php
-$f = MicroKanren::callFresh(function ($q) {
-  return MicroKanren::eq($q, 5);
+use MicroKanren as U;
+
+$f = U\callFresh(function ($q) {
+  return U\eq($q, 5);
 });
-$f(MicroKanren::emptyState());
-/* => (((((0), 5), ()), 1), ()) */
+echo $f(U\emptyState());
+/* => (((#(0) . 5)) . 1)
 ```
 
 See [the test
-suite](https://github.com/mudge/PHPMicroKanren/blob/master/tests/MicroKanrenTest.php)
+suite](https://github.com/mudge/PHPMicroKanren/blob/master/tests/MicroKanren/CoreTest.php)
 for more examples of usage.
 
 ## References
