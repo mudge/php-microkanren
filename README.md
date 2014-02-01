@@ -21,7 +21,7 @@ echo $f(U\emptyState());
 ```
 
 See [the test
-suite](https://github.com/mudge/PHPMicroKanren/blob/master/tests/MicroKanren/CoreTest.php)
+suite](https://github.com/mudge/php-microkanren/blob/master/tests/MicroKanren/CoreTest.php)
 for more examples of usage.
 
 ## References
