@@ -15,8 +15,9 @@ use MicroKanren as U;
 $f = U\callFresh(function ($q) {
   return U\eq($q, 5);
 });
+
 echo $f(U\emptyState());
-/* => (((#(0) . 5)) . 1)
+/* => (((#(0) . 5)) . 1) */
 ```
 
 See [the test
