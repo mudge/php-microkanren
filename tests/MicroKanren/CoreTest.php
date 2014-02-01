@@ -291,4 +291,61 @@ class CoreTest extends \PHPUnit_Framework_TestCase
             sprintf('%s', U\takeAll($d))
         );
     }
+
+    public function testGroundAppendo()
+    {
+        $g = groundAppendo();
+        $h = $g(U\emptyState());
+        $result = $h();
+
+        $this->assertEquals(
+            '(((#(2) . (b)) . ((#(1)) . ((#(0) . a)))) . 3)',
+            sprintf('%s', U\car($result))
+        );
+    }
+
+    public function testGroundAppendo2()
+    {
+        $g = groundAppendo();
+        $h = $g(U\emptyState());
+        $result = $h();
+
+        $this->assertEquals(
+            '(((#(2) . (b)) . ((#(1)) . ((#(0) . a)))) . 3)',
+            sprintf('%s', U\car($result))
+        );
+    }
+
+    public function testAppendo()
+    {
+        $g = callAppendo();
+        $h = $g(U\emptyState());
+
+        $this->assertEquals(
+            '((((#(0) . (#(1) . (#(2) . (#(3))))) . ((#(2) . #(3)) . ((#(1))))) . 4) . ((((#(0) . (#(1) . (#(2) . (#(3))))) . ((#(2) . #(6)) . ((#(5)) . ((#(3) . (#(4) . #(6))) . ((#(1) . (#(4) . #(5)))))))) . 7)))',
+            sprintf('%s', U\take(2, $h))
+        );
+    }
+
+    public function testAppendo2()
+    {
+        $g = callAppendo2();
+        $h = $g(U\emptyState());
+
+        $this->assertEquals(
+            '((((#(0) . (#(1) . (#(2) . (#(3))))) . ((#(2) . #(3)) . ((#(1))))) . 4) . ((((#(0) . (#(1) . (#(2) . (#(3))))) . ((#(3) . (#(4) . #(6))) . ((#(2) . #(6)) . ((#(5)) . ((#(1) . (#(4) . #(5)))))))) . 7)))',
+            sprintf('%s', U\take(2, $h))
+        );
+    }
+
+    public function testManyNonAns()
+    {
+        $g = manyNonAns();
+        $h = $g(U\emptyState());
+
+        $this->assertEquals(
+            '((((#(0) . 3)) . 1))',
+            sprintf('%s', U\take(1, $h))
+        );
+    }
 }
