@@ -251,3 +251,61 @@ function take($n, $d)
         }
     }
 }
+
+function reifyName($n)
+{
+    return "_.{$n}";
+}
+
+function reifyS($v, $s)
+{
+    $v = walk($v, $s);
+    if (isVariable($v)) {
+        $n = reifyName(length($s));
+        return cons(cons($v, $n), $s);
+    } elseif (isPair($v)) {
+        return reifyS(cdr($v), reifyS(car($v), $s));
+    } else {
+        return $s;
+    }
+}
+
+function walkStar($v, $s)
+{
+    $v = walk($v, $s);
+    if (isVariable($v)) {
+        return $v;
+    } elseif (isPair($v)) {
+        return cons(walkStar(car($v), $s), walkStar(cdr($v), $s));
+    } else {
+        return $v;
+    }
+}
+
+function reifyFirst($sC)
+{
+    $v = walkStar(variable(0), car($sC));
+    return walkStar($v, reifyS($v, nil()));
+}
+
+function length($alist)
+{
+    if (isNull($alist)) {
+        return 0;
+    } elseif (isPair($alist)) {
+        return 1 + length(cdr($alist));
+    } else {
+        throw new \InvalidArgumentException("{$alist} is not a proper list");
+    }
+}
+
+function map($proc, $alist)
+{
+    if (isNull($alist)) {
+        return nil();
+    } elseif (isPair($alist)) {
+        return cons($proc(car($alist)), map($proc, cdr($alist)));
+    } else {
+        throw new \InvalidArgumentException("{$alist} is not a proper list");
+    }
+}

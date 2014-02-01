@@ -338,6 +338,32 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testReifyFirstAcrossAppendo()
+    {
+        $f = callAppendo();
+        $g = $f(U\emptyState());
+        $h = U\take(2, $g);
+        $result = U\map('MicroKanren\reifyFirst', $h);
+
+        $this->assertEquals(
+            '((() . (_.0 . (_.0))) . (((_.0) . (_.1 . ((_.0 . _.1))))))',
+            sprintf('%s', $result)
+        );
+    }
+
+    public function testReifyFirstAcrossAppendo2()
+    {
+        $f = callAppendo2();
+        $g = $f(U\emptyState());
+        $h = U\take(2, $g);
+        $result = U\map('MicroKanren\reifyFirst', $h);
+
+        $this->assertEquals(
+            '((() . (_.0 . (_.0))) . (((_.0) . (_.1 . ((_.0 . _.1))))))',
+            sprintf('%s', $result)
+        );
+    }
+
     public function testManyNonAns()
     {
         $g = manyNonAns();
@@ -347,5 +373,49 @@ class CoreTest extends \PHPUnit_Framework_TestCase
             '((((#(0) . 3)) . 1))',
             sprintf('%s', U\take(1, $h))
         );
+    }
+
+    public function testLengthOfNil()
+    {
+        $this->assertEquals(0, U\length(U\nil()));
+    }
+
+    public function testLengthOfList()
+    {
+        $this->assertEquals(3, U\length(U\alist(1, 2, 3)));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage is not a proper list
+     */
+    public function testLengthOfNonList()
+    {
+        U\length(4);
+    }
+
+    public function testMapOverNil()
+    {
+        $isOdd = function ($x) { return $x % 2 !== 0; };
+
+        $this->assertEquals(U\nil(), U\map($isOdd, U\nil()));
+    }
+
+    public function testMapOverList()
+    {
+        $isOdd = function ($x) { return $x % 2 !== 0; };
+
+        $this->assertEquals(U\alist(true, false, true), U\map($isOdd, U\alist(1, 2, 3)));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage is not a proper list
+     */
+    public function testMapOverNonList()
+    {
+        $isOdd = function ($x) { return $x % 2 !== 0; };
+
+        U\map($isOdd, 4);
     }
 }
