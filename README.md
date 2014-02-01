@@ -34,7 +34,7 @@ Inside the `MicroKanren\Core` namespace, there are implementations of the core
 µKanren functions as described in the original paper as well as common Lisp
 primitives needed for their execution. As the reference implementation is in
 [Chez Scheme](http://www.scheme.com), this implementation attempts to mimic
-that particularly Lisp as closely as possible.
+that particular Lisp as closely as possible.
 
 ## Lisp Primitives
 
