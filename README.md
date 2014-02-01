@@ -9,9 +9,9 @@ Add the following to your `composer.json`:
 
 ```javascript
 {
-  "require": {
-    "mudge/php-microkanren": "0.1.0"
-  }
+    "require": {
+        "mudge/php-microkanren": "v0.1.0"
+    }
 }
 ```
 
