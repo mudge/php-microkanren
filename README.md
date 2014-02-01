@@ -18,9 +18,9 @@ Add the following to your `composer.json`:
 ## Usage
 
 ```php
-require_once 'MicroKanren/Core.php';
+require_once 'vendor/autoload.php';
 
-use MicroKanren as U;
+use MicroKanren\Core as U;
 
 $f = U\callFresh(function ($q) {
   return U\eq($q, 5);
@@ -30,7 +30,7 @@ echo $f(U\emptyState());
 /* => (((#(0) . 5)) . 1) */
 ```
 
-Inside the `MicroKanren` namespace, there are implementations of the core
+Inside the `MicroKanren\Core` namespace, there are implementations of the core
 µKanren functions as described in the original paper as well as common Lisp
 primitives needed for their execution. As the reference implementation is in
 [Chez Scheme](http://www.scheme.com), this implementation attempts to mimic

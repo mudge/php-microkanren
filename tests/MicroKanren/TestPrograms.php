@@ -1,5 +1,6 @@
 <?php
-namespace MicroKanren;
+namespace MicroKanren\Core;
+
 require_once __DIR__ . '/../../src/MicroKanren/Core.php';
 
 function aAndB()

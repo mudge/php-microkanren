@@ -1,71 +1,69 @@
 <?php
-namespace MicroKanren;
+namespace MicroKanren\Core;
 
 require_once __DIR__ . '/../../src/MicroKanren/Core.php';
 require_once __DIR__ . '/TestPrograms.php';
-
-use MicroKanren as U;
 
 class CoreTest extends \PHPUnit_Framework_TestCase
 {
     public function testConsWithTwoValues()
     {
-        $list = U\cons(1, 2);
+        $list = cons(1, 2);
         $this->assertEquals('(1 . 2)', sprintf('%s', $list));
     }
 
     public function testConsWithListInCar()
     {
-        $list = U\cons(1, U\cons(2, 3));
+        $list = cons(1, cons(2, 3));
         $this->assertEquals('(1 . (2 . 3))', sprintf('%s', $list));
     }
 
     public function testConsWithMultipleLists()
     {
-        $list = U\cons(1, U\cons(2, U\cons(3, U\nil())));
+        $list = cons(1, cons(2, cons(3, nil())));
         $this->assertEquals('(1 . (2 . (3)))', sprintf('%s', $list));
     }
 
     public function testNil()
     {
-        $list = U\nil();
+        $list = nil();
         $this->assertEquals('()', sprintf('%s', $list));
     }
 
     public function testConsWithNil()
     {
-        $list = U\cons(1, U\nil());
+        $list = cons(1, nil());
         $this->assertEquals('(1)', sprintf('%s', $list));
     }
 
     public function testConsIsAPair()
     {
-        $list = U\cons(1, 2);
-        $this->assertTrue(U\isPair($list));
+        $list = cons(1, 2);
+        $this->assertTrue(isPair($list));
     }
 
     public function testConsWithOneElementIsAPair()
     {
-        $list = U\cons(1, U\nil());
-        $this->assertTrue(U\isPair($list));
+        $list = cons(1, nil());
+        $this->assertTrue(isPair($list));
     }
 
     public function testNilIsNotAPair()
     {
-        $list = U\nil();
-        $this->assertFalse(U\isPair($list));
+        $list = nil();
+        $this->assertFalse(isPair($list));
     }
 
     public function testCarOfPair()
     {
-        $list = U\cons(1, 2);
-        $this->assertEquals(1, U\car($list));
+        $list = cons(1, 2);
+        $this->assertEquals(1, car($list));
     }
 
     public function testCarOfSingleList()
     {
-        $list = U\cons(1, U\nil());
-        $this->assertEquals(1, U\car($list));
+        $list = cons(1, nil());
+        $this->assertEquals(1, car($list));
     }
 
     /**
@@ -74,26 +72,26 @@ class CoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testCarOfNil()
     {
-        $list = U\nil();
-        U\car($list);
+        $list = nil();
+        car($list);
     }
 
     public function testCdrOfPair()
     {
-        $list = U\cons(1, 2);
-        $this->assertEquals(2, U\cdr($list));
+        $list = cons(1, 2);
+        $this->assertEquals(2, cdr($list));
     }
 
     public function testCdrOfList()
     {
-        $list = U\cons(1, U\cons(2, 3));
-        $this->assertEquals(U\cons(2, 3), U\cdr($list));
+        $list = cons(1, cons(2, 3));
+        $this->assertEquals(cons(2, 3), cdr($list));
     }
 
     public function testCdrOfSingleList()
     {
-        $list = U\cons(1, U\nil());
-        $this->assertEquals(U\nil(), U\cdr($list));
+        $list = cons(1, nil());
+        $this->assertEquals(nil(), cdr($list));
     }
 
     /**
@@ -102,40 +100,40 @@ class CoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testCdrOfNil()
     {
-        $list = U\nil();
-        U\cdr($list);
+        $list = nil();
+        cdr($list);
     }
 
     public function testAlist()
     {
-        $list = U\alist(1, 2, 3);
+        $list = alist(1, 2, 3);
 
-        $this->assertEquals(U\cons(1, U\cons(2, U\cons(3, U\nil()))), $list);
+        $this->assertEquals(cons(1, cons(2, cons(3, nil()))), $list);
     }
 
     public function testAlistWithNoElements()
     {
-        $list = U\alist();
+        $list = alist();
 
-        $this->assertEquals(U\nil(), $list);
+        $this->assertEquals(nil(), $list);
     }
 
     public function testAssp()
     {
-        $list = U\alist(U\cons(1, 'a'), U\cons(2, 'b'));
+        $list = alist(cons(1, 'a'), cons(2, 'b'));
         $isEven = function ($x) { return $x % 2 === 0; };
         $isOdd = function ($x) { return $x % 2 !== 0; };
 
-        $this->assertEquals(U\cons(1, 'a'), U\assp($isOdd, $list));
-        $this->assertEquals(U\cons(2, 'b'), U\assp($isEven, $list));
+        $this->assertEquals(cons(1, 'a'), assp($isOdd, $list));
+        $this->assertEquals(cons(2, 'b'), assp($isEven, $list));
     }
 
     public function testAsspWithNil()
     {
-        $list = U\nil();
+        $list = nil();
         $isEven = function ($x) { return $x % 2 === 0; };
 
-        $this->assertFalse(U\assp($isEven, $list));
+        $this->assertFalse(assp($isEven, $list));
     }
 
     /**
@@ -144,206 +142,206 @@ class CoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testAsspWithMalformedAlist()
     {
-        $list = U\cons(1, 2);
+        $list = cons(1, 2);
         $isEven = function ($x) { return $x % 2 === 0; };
 
-        U\assp($isEven, $list);
+        assp($isEven, $list);
     }
 
     public function testIsEqv()
     {
-        $list = U\cons(1, 2);
-        $list2 = U\cons(1, 2);
+        $list = cons(1, 2);
+        $list2 = cons(1, 2);
 
-        $this->assertTrue(U\isEqv($list, $list));
-        $this->assertFalse(U\isEqv($list, $list2));
+        $this->assertTrue(isEqv($list, $list));
+        $this->assertFalse(isEqv($list, $list2));
     }
 
     public function testVariable()
     {
-        $var = U\variable(1);
+        $var = variable(1);
 
         $this->assertEquals('#(1)', sprintf('%s', $var));
     }
 
     public function testIsVariable()
     {
-        $var = U\variable(1);
-        $list = U\cons(1, 2);
+        $var = variable(1);
+        $list = cons(1, 2);
 
-        $this->assertTrue(U\isVariable($var));
-        $this->assertFalse(U\isVariable($list));
+        $this->assertTrue(isVariable($var));
+        $this->assertFalse(isVariable($list));
     }
 
     public function testIsVariableEquals()
     {
-        $var = U\variable(1);
-        $var2 = U\variable(1);
-        $var3 = U\variable(2);
+        $var = variable(1);
+        $var2 = variable(1);
+        $var3 = variable(2);
 
-        $this->assertTrue(U\isVariableEquals($var, $var2));
-        $this->assertFalse(U\isVariableEquals($var2, $var3));
+        $this->assertTrue(isVariableEquals($var, $var2));
+        $this->assertFalse(isVariableEquals($var2, $var3));
     }
 
     public function testMzero()
     {
-        $this->assertEquals(U\nil(), U\mzero());
+        $this->assertEquals(nil(), mzero());
     }
 
     public function testIsNull()
     {
-        $this->assertTrue(U\isNull(U\nil()));
-        $this->assertFalse(U\isNull(1));
-        $this->assertFalse(U\isNull(U\cons(1, 2)));
+        $this->assertTrue(isNull(nil()));
+        $this->assertFalse(isNull(1));
+        $this->assertFalse(isNull(cons(1, 2)));
     }
 
     public function testSecondSetT1()
     {
-        $x = U\callFresh(function ($q) { return U\eq($q, 5); });
-        $result = $x(U\emptyState());
+        $x = callFresh(function ($q) { return eq($q, 5); });
+        $result = $x(emptyState());
 
         $this->assertEquals(
             '(((#(0) . 5)) . 1)',
-            sprintf('%s', U\car($result))
+            sprintf('%s', car($result))
         );
     }
 
     public function testSecondSetT2()
     {
-        $x = U\callFresh(function ($q) { return U\eq($q, 5); });
-        $result = $x(U\emptyState());
+        $x = callFresh(function ($q) { return eq($q, 5); });
+        $result = $x(emptyState());
 
-        $this->assertEquals('()', sprintf('%s', U\cdr($result)));
+        $this->assertEquals('()', sprintf('%s', cdr($result)));
     }
 
     public function testSecondSetT3()
     {
         $x = aAndB();
-        $result = $x(U\emptyState());
+        $result = $x(emptyState());
 
         $this->assertEquals(
             '(((#(1) . 5) . ((#(0) . 7))) . 2)',
-            sprintf('%s', U\car($result))
+            sprintf('%s', car($result))
         );
     }
 
     public function testSecondSetT3Take()
     {
         $x = aAndB();
-        $result = $x(U\emptyState());
+        $result = $x(emptyState());
 
         $this->assertEquals(
             '((((#(1) . 5) . ((#(0) . 7))) . 2))',
-            sprintf('%s', U\take(1, $result))
+            sprintf('%s', take(1, $result))
         );
     }
 
     public function testSecondSetT4()
     {
         $x = aAndB();
-        $result = $x(U\emptyState());
+        $result = $x(emptyState());
 
         $this->assertEquals(
             '(((#(1) . 6) . ((#(0) . 7))) . 2)',
-            sprintf('%s', U\car(U\cdr($result)))
+            sprintf('%s', car(cdr($result)))
         );
     }
 
     public function testSecondSetT5()
     {
         $x = aAndB();
-        $result = $x(U\emptyState());
+        $result = $x(emptyState());
 
-        $this->assertEquals('()', sprintf('%s', U\cdr(U\cdr($result))));
+        $this->assertEquals('()', sprintf('%s', cdr(cdr($result))));
     }
 
     public function testWhoCares()
     {
-        $x = U\callFresh(function ($q) {
+        $x = callFresh(function ($q) {
             return fives($q);
         });
-        $result = $x(U\emptyState());
+        $result = $x(emptyState());
 
         $this->assertEquals(
             '((((#(0) . 5)) . 1))',
-            sprintf('%s', U\take(1, $result))
+            sprintf('%s', take(1, $result))
         );
     }
 
     public function testTake2AAndBStream()
     {
         $f = aAndB();
-        $d = $f(U\emptyState());
+        $d = $f(emptyState());
 
         $this->assertEquals(
             '((((#(1) . 5) . ((#(0) . 7))) . 2) . ((((#(1) . 6) . ((#(0) . 7))) . 2)))',
-            sprintf('%s', U\take(2, $d))
+            sprintf('%s', take(2, $d))
         );
     }
 
     public function testTakeAllAAndBStream()
     {
         $f = aAndB();
-        $d = $f(U\emptyState());
+        $d = $f(emptyState());
 
         $this->assertEquals(
             '((((#(1) . 5) . ((#(0) . 7))) . 2) . ((((#(1) . 6) . ((#(0) . 7))) . 2)))',
-            sprintf('%s', U\takeAll($d))
+            sprintf('%s', takeAll($d))
         );
     }
 
     public function testGroundAppendo()
     {
         $g = groundAppendo();
-        $h = $g(U\emptyState());
+        $h = $g(emptyState());
         $result = $h();
 
         $this->assertEquals(
             '(((#(2) . (b)) . ((#(1)) . ((#(0) . a)))) . 3)',
-            sprintf('%s', U\car($result))
+            sprintf('%s', car($result))
         );
     }
 
     public function testGroundAppendo2()
     {
         $g = groundAppendo();
-        $h = $g(U\emptyState());
+        $h = $g(emptyState());
         $result = $h();
 
         $this->assertEquals(
             '(((#(2) . (b)) . ((#(1)) . ((#(0) . a)))) . 3)',
-            sprintf('%s', U\car($result))
+            sprintf('%s', car($result))
         );
     }
 
     public function testAppendo()
     {
         $g = callAppendo();
-        $h = $g(U\emptyState());
+        $h = $g(emptyState());
 
         $this->assertEquals(
             '((((#(0) . (#(1) . (#(2) . (#(3))))) . ((#(2) . #(3)) . ((#(1))))) . 4) . ((((#(0) . (#(1) . (#(2) . (#(3))))) . ((#(2) . #(6)) . ((#(5)) . ((#(3) . (#(4) . #(6))) . ((#(1) . (#(4) . #(5)))))))) . 7)))',
-            sprintf('%s', U\take(2, $h))
+            sprintf('%s', take(2, $h))
         );
     }
 
     public function testAppendo2()
     {
         $g = callAppendo2();
-        $h = $g(U\emptyState());
+        $h = $g(emptyState());
 
         $this->assertEquals(
             '((((#(0) . (#(1) . (#(2) . (#(3))))) . ((#(2) . #(3)) . ((#(1))))) . 4) . ((((#(0) . (#(1) . (#(2) . (#(3))))) . ((#(3) . (#(4) . #(6))) . ((#(2) . #(6)) . ((#(5)) . ((#(1) . (#(4) . #(5)))))))) . 7)))',
-            sprintf('%s', U\take(2, $h))
+            sprintf('%s', take(2, $h))
         );
     }
 
     public function testReifyFirstAcrossAppendo()
     {
         $f = callAppendo();
-        $g = $f(U\emptyState());
-        $h = U\take(2, $g);
-        $result = U\map('MicroKanren\reifyFirst', $h);
+        $g = $f(emptyState());
+        $h = take(2, $g);
+        $result = map('MicroKanren\Core\reifyFirst', $h);
 
         $this->assertEquals(
             '((() . (_.0 . (_.0))) . (((_.0) . (_.1 . ((_.0 . _.1))))))',
@@ -354,9 +352,9 @@ class CoreTest extends \PHPUnit_Framework_TestCase
     public function testReifyFirstAcrossAppendo2()
     {
         $f = callAppendo2();
-        $g = $f(U\emptyState());
-        $h = U\take(2, $g);
-        $result = U\map('MicroKanren\reifyFirst', $h);
+        $g = $f(emptyState());
+        $h = take(2, $g);
+        $result = map('MicroKanren\Core\reifyFirst', $h);
 
         $this->assertEquals(
             '((() . (_.0 . (_.0))) . (((_.0) . (_.1 . ((_.0 . _.1))))))',
@@ -367,22 +365,22 @@ class CoreTest extends \PHPUnit_Framework_TestCase
     public function testManyNonAns()
     {
         $g = manyNonAns();
-        $h = $g(U\emptyState());
+        $h = $g(emptyState());
 
         $this->assertEquals(
             '((((#(0) . 3)) . 1))',
-            sprintf('%s', U\take(1, $h))
+            sprintf('%s', take(1, $h))
         );
     }
 
     public function testLengthOfNil()
     {
-        $this->assertEquals(0, U\length(U\nil()));
+        $this->assertEquals(0, length(nil()));
     }
 
     public function testLengthOfList()
     {
-        $this->assertEquals(3, U\length(U\alist(1, 2, 3)));
+        $this->assertEquals(3, length(alist(1, 2, 3)));
     }
 
     /**
@@ -391,21 +389,21 @@ class CoreTest extends \PHPUnit_Framework_TestCase
      */
     public function testLengthOfNonList()
     {
-        U\length(4);
+        length(4);
     }
 
     public function testMapOverNil()
     {
         $isOdd = function ($x) { return $x % 2 !== 0; };
 
-        $this->assertEquals(U\nil(), U\map($isOdd, U\nil()));
+        $this->assertEquals(nil(), map($isOdd, nil()));
     }
 
     public function testMapOverList()
     {
         $isOdd = function ($x) { return $x % 2 !== 0; };
 
-        $this->assertEquals(U\alist(true, false, true), U\map($isOdd, U\alist(1, 2, 3)));
+        $this->assertEquals(alist(true, false, true), map($isOdd, alist(1, 2, 3)));
     }
 
     /**
@@ -416,6 +414,6 @@ class CoreTest extends \PHPUnit_Framework_TestCase
     {
         $isOdd = function ($x) { return $x % 2 !== 0; };
 
-        U\map($isOdd, 4);
+        map($isOdd, 4);
     }
 }

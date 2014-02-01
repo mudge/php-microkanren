@@ -1,5 +1,5 @@
 <?php
-namespace MicroKanren;
+namespace MicroKanren\Core;
 
 class Variable
 {

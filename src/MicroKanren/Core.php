@@ -1,8 +1,8 @@
 <?php
-namespace MicroKanren;
+namespace MicroKanren\Core;
 
-require_once __DIR__ . '/Cons.php';
-require_once __DIR__ . '/Variable.php';
+require_once __DIR__ . '/Core/Cons.php';
+require_once __DIR__ . '/Core/Variable.php';
 
 function cons($car, $cdr)
 {
