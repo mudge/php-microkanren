@@ -1,29 +1,62 @@
 <?php
+
+/* Copyright (c) 2014, Paul Mucur (http://mudge.name)
+ *
+ * Distributed under the MIT License, see LICENSE.
+ */
+
 namespace MicroKanren\Core;
 
 require_once __DIR__ . '/Core/Cons.php';
 require_once __DIR__ . '/Core/Variable.php';
 
+/**
+ * Returns a cons cell with the two given values.
+ *
+ * @param mixed $car the value of the left-hand "car" field
+ * @param mixed $cdr the value of the right hand "cdr" field
+ */
 function cons($car, $cdr)
 {
     return new Cons($car, $cdr);
 }
 
+/**
+ * Returns nil, the empty list.
+ */
 function nil()
 {
     return Cons::nil();
 }
 
+/**
+ * Returns true if the given object is a valid pair, viz. a cons cell that is
+ * not nil.
+ *
+ * @param mixed $obj the object to be tested
+ */
 function isPair($obj)
 {
     return $obj instanceof Cons && !$obj->isNil();
 }
 
+/**
+ * Returns true if the given object is the empty list.
+ *
+ * @param mixed $obj the object to be tested
+ */
 function isNull($obj)
 {
     return $obj instanceof Cons && $obj->isNil();
 }
 
+/**
+ * Returns the car value of the given cons cell.
+ *
+ * e.g. car(cons(1, 2)) is 1
+ *
+ * @param Cons $alist
+ */
 function car($alist)
 {
     if (!isPair($alist)) {
@@ -33,6 +66,13 @@ function car($alist)
     return $alist->car;
 }
 
+/**
+ * Returns the cdr value of the given cons cell.
+ *
+ * e.g. cdr(cons(1, 2)) is 2
+ *
+ * @param Cons $alist
+ */
 function cdr($alist)
 {
     if (!isPair($alist)) {
@@ -42,6 +82,14 @@ function cdr($alist)
     return $alist->cdr;
 }
 
+/**
+ * Returns the first element of a list for whose car a procedure returns true
+ * or false if no match is found.
+ *
+ * @param callable $proc a function that takes one argument and returns a
+ *                       boolean
+ * @param Cons $alist an association list of key-value pairs
+ */
 function assp($proc, $alist)
 {
     if (isPair($alist)) {
