@@ -30,6 +30,11 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('()', sprintf('%s', $list));
     }
 
+    public function testNilsAreTheSame()
+    {
+        $this->assertSame(nil(), nil());
+    }
+
     public function testConsWithNil()
     {
         $list = cons(1, nil());
@@ -76,6 +81,14 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         car($list);
     }
 
+    public function testCarDoesNotCopy()
+    {
+        $var = variable(0);
+        $list = cons($var, nil());
+
+        $this->assertSame($var, car($list));
+    }
+
     public function testCdrOfPair()
     {
         $list = cons(1, 2);
@@ -103,6 +116,15 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $list = nil();
         cdr($list);
     }
+
+    public function testCdrDoesNotCopy()
+    {
+        $var = variable(0);
+        $list = cons($var, $var);
+
+        $this->assertSame($var, cdr($list));
+    }
+
 
     public function testAlist()
     {
@@ -146,6 +168,18 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         $isEven = function ($x) { return $x % 2 === 0; };
 
         assp($isEven, $list);
+    }
+
+    public function testAsspDoesNotCopy()
+    {
+        $a = cons(1, 'a');
+        $b = cons(2, 'b');
+        $list = alist($a, $b);
+        $isEven = function ($x) { return $x % 2 === 0; };
+        $isOdd = function ($x) { return $x % 2 !== 0; };
+
+        $this->assertSame($a, assp($isOdd, $list));
+        $this->assertSame($b, assp($isEven, $list));
     }
 
     public function testVariable()

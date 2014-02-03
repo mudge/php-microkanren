@@ -121,7 +121,7 @@ function unify($u, $v, $s)
         if ($s) {
             return unify(cdr($u), cdr($v), $s);
         }
-    } elseif (isVariableEquals($u, $v)) {
+    } elseif ($u === $v) {
         return $s;
     }
 }

@@ -17,6 +17,7 @@ namespace MicroKanren\Core;
  */
 class Cons
 {
+    private static $nil = null;
 
     /**
      * @param mixed $car the value of the left-hand "car" field
@@ -60,7 +61,11 @@ class Cons
      */
     public static function nil()
     {
-        return new Cons();
+        if (self::$nil === null) {
+            self::$nil = new Cons();
+        }
+
+        return self::$nil;
     }
 }
 
@@ -147,7 +152,7 @@ function isNull($obj)
 function car($alist)
 {
     if (!isPair($alist)) {
-        throw new \InvalidArgumentException('() is not a pair');
+        throw new \InvalidArgumentException("{$alist} is not a pair");
     }
 
     return $alist->car;
@@ -163,7 +168,7 @@ function car($alist)
 function cdr($alist)
 {
     if (!isPair($alist)) {
-        throw new \InvalidArgumentException('() is not a pair');
+        throw new \InvalidArgumentException("{$alist} is not a pair");
     }
 
     return $alist->cdr;
