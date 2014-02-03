@@ -148,15 +148,6 @@ class CoreTest extends \PHPUnit_Framework_TestCase
         assp($isEven, $list);
     }
 
-    public function testIsEqv()
-    {
-        $list = cons(1, 2);
-        $list2 = cons(1, 2);
-
-        $this->assertTrue(isEqv($list, $list));
-        $this->assertFalse(isEqv($list, $list2));
-    }
-
     public function testVariable()
     {
         $var = variable(1);

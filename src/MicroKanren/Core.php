@@ -11,143 +11,51 @@ require_once __DIR__ . '/Core/Cons.php';
 require_once __DIR__ . '/Core/Variable.php';
 
 /**
- * Returns a cons cell with the two given values.
+ * Returns a new variable containing an index.
  *
- * @param mixed $car the value of the left-hand "car" field
- * @param mixed $cdr the value of the right hand "cdr" field
+ * @param integer $c the variable index
  */
-function cons($car, $cdr)
-{
-    return new Cons($car, $cdr);
-}
-
-/**
- * Returns nil, the empty list.
- */
-function nil()
-{
-    return Cons::nil();
-}
-
-/**
- * Returns true if the given object is a valid pair, viz. a cons cell that is
- * not nil.
- *
- * @param mixed $obj the object to be tested
- */
-function isPair($obj)
-{
-    return $obj instanceof Cons && !$obj->isNil();
-}
-
-/**
- * Returns true if the given object is the empty list.
- *
- * @param mixed $obj the object to be tested
- */
-function isNull($obj)
-{
-    return $obj instanceof Cons && $obj->isNil();
-}
-
-/**
- * Returns the car value of the given cons cell.
- *
- * e.g. car(cons(1, 2)) is 1
- *
- * @param Cons $alist
- */
-function car($alist)
-{
-    if (!isPair($alist)) {
-        throw new \InvalidArgumentException('() is not a pair');
-    }
-
-    return $alist->car;
-}
-
-/**
- * Returns the cdr value of the given cons cell.
- *
- * e.g. cdr(cons(1, 2)) is 2
- *
- * @param Cons $alist
- */
-function cdr($alist)
-{
-    if (!isPair($alist)) {
-        throw new \InvalidArgumentException('() is not a pair');
-    }
-
-    return $alist->cdr;
-}
-
-/**
- * Returns the first element of a list for whose car a procedure returns true
- * or false if no match is found.
- *
- * @param callable $proc a function that takes one argument and returns a
- *                       boolean
- * @param Cons $alist an association list of key-value pairs
- */
-function assp($proc, $alist)
-{
-    if (isPair($alist)) {
-        $car = car($alist);
-        try {
-            $x = car($car);
-        } catch (\InvalidArgumentException $e) {
-            throw new \InvalidArgumentException("improperly formed alist {$alist}");
-        }
-
-        if ($proc($x)) {
-            return $car;
-        } else {
-            return assp($proc, cdr($alist));
-        }
-    } else {
-        return false;
-    }
-}
-
-function alist()
-{
-    $elements = func_get_args();
-    $length = func_num_args();
-    $list = nil();
-
-    for ($i = $length - 1; $i >= 0; $i -= 1) {
-        $list = cons($elements[$i], $list);
-    }
-
-    return $list;
-}
-
-function isEqv($obj1, $obj2)
-{
-    return $obj1 === $obj2;
-}
-
 function variable($c)
 {
     return new Variable($c);
 }
 
+/**
+ * Returns true if the given object is a variable.
+ *
+ * @param mixed $x the object to test
+ */
 function isVariable($x)
 {
     return $x instanceof Variable;
 }
 
+/**
+ * Returns true if both arguments refer to the same variable.
+ *
+ * @param Variable $x1 the first variable
+ * @param Variable $x2 the second variable
+ */
 function isVariableEquals($x1, $x2)
 {
     return $x1 == $x2;
 }
 
+/**
+ * Returns the empty stream.
+ */
 function mzero()
 {
     return nil();
 }
 
+/**
+ * Searches for a variable's value in the substitution. If a non-variable term
+ * is walked, return that term.
+ *
+ * @param mixed $u a variable or non-variable term
+ * @param Cons  $s the substitution
+ */
 function walk($u, $s)
 {
     if (isVariable($u)) {
@@ -168,16 +76,35 @@ function walk($u, $s)
     }
 }
 
+/**
+ * Extends the substitution with a new binding.
+ *
+ * @param Variable $x a variable
+ * @param mixed    $v an arbitrary term
+ * @param Cons     $s the substitution.
+ */
 function extS($x, $v, $s)
 {
     return cons(cons($x, $v), $s);
 }
 
+/**
+ * Lifts the state into a stream whose only element is that state.
+ *
+ * @param Cons $sC the state
+ */
 function unit($sC)
 {
     return cons($sC, mzero());
 }
 
+/**
+ * Unifies two terms in a substitution.
+ *
+ * @param Variable $u a variable
+ * @param mixed    $v a term
+ * @param Cons     $s the substitution
+ */
 function unify($u, $v, $s)
 {
     $u = walk($u, $s);
@@ -199,6 +126,12 @@ function unify($u, $v, $s)
     }
 }
 
+/**
+ * Returns a goal that succeeds if two terms unify in the received state.
+ *
+ * @param mixed $u a term
+ * @param mixed $v a term
+ */
 function eq($u, $v)
 {
     return function ($sC) use ($u, $v) {
@@ -211,6 +144,11 @@ function eq($u, $v)
     };
 }
 
+/**
+ * Returns a goal given a unary function whose body is a goal.
+ *
+ * @param callable $f a unary function whose body is a goal
+ */
 function callFresh($f)
 {
     return function ($sC) use ($f) {
@@ -220,6 +158,12 @@ function callFresh($f)
     };
 }
 
+/**
+ * Merges streams.
+ *
+ * @param [Cons|callable] $d1 a stream
+ * @param Cons            $d2 a stream
+ */
 function mplus($d1, $d2)
 {
     if (isNull($d1)) {
@@ -233,6 +177,12 @@ function mplus($d1, $d2)
     }
 }
 
+/**
+ * Invokes a goal on each element of a stream.
+ *
+ * @param [Cons|callable] $d a stream
+ * @param callable        $g a goal
+ */
 function bind($d, $g)
 {
     if (isNull($d)) {
@@ -246,6 +196,12 @@ function bind($d, $g)
     }
 }
 
+/**
+ * Returns a goal that succeeds if either of the given goals succeed.
+ *
+ * @param callable $g1 a goal
+ * @param callable $g2 a goal
+ */
 function disj($g1, $g2)
 {
     return function ($sC) use ($g1, $g2) {
@@ -253,6 +209,12 @@ function disj($g1, $g2)
     };
 }
 
+/**
+ * Returns a goal that succeeds if both given goals succeed.
+ *
+ * @param callable $g1 a goal
+ * @param callable $g2 a goal
+ */
 function conj($g1, $g2)
 {
     return function ($sC) use ($g1, $g2) {
@@ -260,11 +222,19 @@ function conj($g1, $g2)
     };
 }
 
+/**
+ * Returns a state with an empty substitution and variable index at 0.
+ */
 function emptyState()
 {
     return cons(mzero(), 0);
 }
 
+/**
+ * Advances a stream until it matures.
+ *
+ * @param [Cons|callable] $d a stream
+ */
 function pull($d)
 {
     if (is_callable($d)) {
@@ -274,6 +244,11 @@ function pull($d)
     }
 }
 
+/**
+ * Returns all results from a stream.
+ *
+ * @param [Cons|callable] $d a stream
+ */
 function takeAll($d)
 {
     $d = pull($d);
@@ -285,6 +260,12 @@ function takeAll($d)
     }
 }
 
+/**
+ * Returns a specific number of results from a stream.
+ *
+ * @param integer         $n the number of results
+ * @param [Cons|callable] $d a stream
+ */
 function take($n, $d)
 {
     if ($n === 0) {
@@ -300,11 +281,22 @@ function take($n, $d)
     }
 }
 
+/**
+ * Returns a string name for a given number.
+ *
+ * @param integer $n the number
+ */
 function reifyName($n)
 {
     return "_.{$n}";
 }
 
+/**
+ * Reifies a state's substitution with respect to a variable.
+ *
+ * @param Variable $v a variable
+ * @param Cons     $s a substitution
+ */
 function reifyS($v, $s)
 {
     $v = walk($v, $s);
