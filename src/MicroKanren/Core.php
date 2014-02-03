@@ -328,24 +328,3 @@ function reifyFirst($sC)
     return walkStar($v, reifyS($v, nil()));
 }
 
-function length($alist)
-{
-    if (isNull($alist)) {
-        return 0;
-    } elseif (isPair($alist)) {
-        return 1 + length(cdr($alist));
-    } else {
-        throw new \InvalidArgumentException("{$alist} is not a proper list");
-    }
-}
-
-function map($proc, $alist)
-{
-    if (isNull($alist)) {
-        return nil();
-    } elseif (isPair($alist)) {
-        return cons($proc(car($alist)), map($proc, cdr($alist)));
-    } else {
-        throw new \InvalidArgumentException("{$alist} is not a proper list");
-    }
-}
