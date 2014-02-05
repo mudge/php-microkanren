@@ -7,7 +7,7 @@
 
 namespace MicroKanren\Core;
 
-require_once __DIR__ . '/Core/Cons.php';
+require_once __DIR__ . '/Core/Lisp.php';
 require_once __DIR__ . '/Core/Variable.php';
 
 /**
