@@ -72,6 +72,14 @@ function fresh($f)
     }
 }
 
+/**
+ * Recursively builds calls to callFresh for fresh.
+ *
+ * Largely taken from the Underscore contributers' library implementation of
+ * curry: http://git.io/eUBA5Q
+ *
+ * Thanks to @obmarg for the pointer.
+ */
 function collectArgs($f, $argCount, $args, $arg)
 {
     $args[] = $arg;
