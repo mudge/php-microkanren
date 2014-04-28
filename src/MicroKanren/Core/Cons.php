@@ -15,7 +15,7 @@ namespace MicroKanren\Core;
  *
  * c.f. http://en.wikipedia.org/wiki/Cons
  */
-class Cons
+class Cons implements \IteratorAggregate
 {
     private static $nil = null;
 
@@ -45,6 +45,18 @@ class Cons
             return "({$this->car})";
         } else {
             return "({$this->car} . {$this->cdr})";
+        }
+    }
+
+    /**
+     * Returns an iterator for the cons list
+     */
+    public function getIterator()
+    {
+        $list = $this;
+        while (!$list->isNil()) {
+            yield $list->car;
+            $list = $list->cdr;
         }
     }
 
